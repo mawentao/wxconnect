@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root><![CDATA[
+<center style="padding:20px;">
+    <b id="lefttime-span"></b>秒后跳转到微信登录...<br>
+    <a href="<%loginurl%>" style="text-decoration:underline;">点此立即跳转</a>
+</center>
+<script>
+    var leftseconds=4;
+    function djs() {
+        --leftseconds;
+		document.getElementById('lefttime-span').innerHTML=leftseconds;
+		if (leftseconds==0) {
+			window.location='<%loginurl%>';
+		}
+		setTimeout(djs,1000);
+	}
+	djs();
+</script>
+]]></root>

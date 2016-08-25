@@ -1,0 +1,67 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/> 
+  <title><!--{$lang['title']}--></title>
+  <script src="<!--{$template_path}-->/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="<!--{$template_path}-->/libs/qrcode.js"></script>
+  <style>
+  </style>  
+  <script>
+    var qrid  = "{$qrid}";
+    var qrurl = "{$qrurl}";
+	var ajaxapi = "{$ajaxapi}";
+    jQuery(document).ready(function($) {
+        var qrcode = new QRCode(document.getElementById('login-url-qr'), {
+            width  : 250,
+            height : 250
+        });
+	    qrcode.makeCode(qrurl);
+		check();
+    });
+
+	function check() {
+		console.log("check "+qrid);
+        var ajaxurl = ajaxapi+"wxlogin&action=check";
+		var params = {qrid:qrid};
+		jQuery.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            dataType: "json",
+            data: params,
+            complete: function(res) {
+			    setTimeout(check,2500);
+            },
+            success: function(res) {
+				if (res.data.uid!=0) {
+					window.location.reload();
+				}
+                //console.log(res);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                var errmsg = "Error("+XMLHttpRequest.readyState+") : "+textStatus;
+				console.log(errmsg);
+            }
+        });
+	}
+
+  </script>
+</head>
+<body style="background:rgb(51,51,51);padding:50px;">
+  <center>
+    <p style="color:#fff;font-size:20px;font-family:'microsoft yahei';"><!--{$lang['title']}--></p>
+	<div style="padding:15px 0;background:#fff;width:280px;">
+	    <div id="login-url-qr"></div>
+	</div>
+    <div style="width:280px;margin-top:15px;background-color:#232323;border-radius: 100px;color:#fff;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    box-shadow: inset 0 5px 10px -5px #191919,0 1px 0 0 #444;
+    -moz-box-shadow: inset 0 5px 10px -5px #191919,0 1px 0 0 #444;
+    -webkit-box-shadow: inset 0 5px 10px -5px #191919,0 1px 0 0 #444;
+    ">
+	    <p style="line-height:22px;padding:5px 0;"><!--{$lang['tip']}--></p>
+    </div>
+  </center>
+</body>
+</html>
